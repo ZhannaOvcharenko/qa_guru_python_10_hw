@@ -7,6 +7,7 @@ from selene.support.shared import browser
 browser.config.window_width = 1920
 browser.config.window_height = 1080
 
+
 def test_issue_name_clean_selen():
     browser.open('https://github.com')
 
@@ -16,6 +17,7 @@ def test_issue_name_clean_selen():
     browser.element('#issues-tab').click()
 
     browser.element('[data-testid=issue-pr-title-link]').should(have.exact_text('Test issue'))
+
 
 def test_issue_name_dynamic_steps():
     allure.dynamic.tag("github")
@@ -44,7 +46,6 @@ def test_issue_name_dynamic_steps():
 @allure.feature("Issues в репозитории")
 @allure.story("Проверка соответствия названия issue")
 @allure.link("https://github.com", name="Testing")
-
 def test_issue_name_with_decorator_steps():
     open_github_main_page()
     search_for_repository('ZhannaOvcharenko/qa_guru_python_10_hw')
@@ -52,22 +53,27 @@ def test_issue_name_with_decorator_steps():
     open_issues_tab()
     should_see_issue_with_name('Test issue')
 
+
 @allure.step("Открыть главную страницу")
 def open_github_main_page():
     browser.open('https://github.com')
+
 
 @allure.step("Найти репозиторий {repo}")
 def search_for_repository(repo):
     browser.element('.header-search-button').click()
     browser.element('#query-builder-test').type(repo).press_enter()
 
+
 @allure.step("Перейти по ссылке в репозиторий {repo}")
 def go_to_repository(repo):
     browser.element(by.link_text(repo)).click()
 
+
 @allure.step("Открыть вкладку 'issues'")
 def open_issues_tab():
     browser.element('#issues-tab').click()
+
 
 @allure.step("Проверить наличие issue с названием {name}")
 def should_see_issue_with_name(name):
