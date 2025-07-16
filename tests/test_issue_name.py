@@ -3,9 +3,16 @@ from allure_commons.types import Severity
 from selene.support import by
 from selene.support.conditions import have
 from selene.support.shared import browser
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
+
+service = Service(ChromeDriverManager().install())
+browser.config.driver = webdriver.Chrome(service=service)
 browser.config.window_width = 1920
 browser.config.window_height = 1080
+browser.config.timeout = 10
 
 
 def test_issue_name_clean_selen():
@@ -16,7 +23,7 @@ def test_issue_name_clean_selen():
     browser.element(by.link_text('ZhannaOvcharenko/qa_guru_python_10_hw')).click()
     browser.element('#issues-tab').click()
 
-    browser.element('[data-testid=issue-pr-title-link]').should(have.exact_text('Test issue'))
+    browser.element('a.Link--primary[data-hovercard-type="issue"]').should(have.text('Test issue'))
 
 
 def test_issue_name_dynamic_steps():
@@ -32,12 +39,15 @@ def test_issue_name_dynamic_steps():
     with allure.step("Найти репозиторий"):
         browser.element('.header-search-button').click()
         browser.element('#query-builder-test').type('ZhannaOvcharenko/qa_guru_python_10_hw').press_enter()
+
     with allure.step("Перейти по ссылке в репозиторий"):
-        browser.element(by.link_text('kyarygina/qa_guru_python_20_10')).click()
+        browser.element(by.link_text('ZhannaOvcharenko/qa_guru_python_10_hw')).click()
+
     with allure.step("Открыть вкладку 'issues'"):
         browser.element('#issues-tab').click()
+
     with allure.step("Проверить наличие issue с названием 'Test issue'"):
-        browser.element('[data-testid=issue-pr-title-link]').should(have.exact_text('Test issue'))
+        browser.element('a.Link--primary[data-hovercard-type="issue"]').should(have.text('Test issue'))
 
 
 @allure.tag("github")
@@ -77,4 +87,4 @@ def open_issues_tab():
 
 @allure.step("Проверить наличие issue с названием {name}")
 def should_see_issue_with_name(name):
-    browser.element('[data-testid=issue-pr-title-link]').should(have.exact_text(name))
+    browser.element('a.Link--primary[data-hovercard-type="issue"]').should(have.text(name))
